@@ -1,0 +1,6 @@
+Da del dominio Google area di lavoro della Console di amministrazione , andare al menu principale menu > Sicurezza> Controlli API.
+Nel riquadro delegazione ampia di dominio, selezionare Gestione Dominio ampia delega.
+Fare clic su Aggiungi nuovo.
+Nel campo ID cliente, inserire l'ID cliente dell'account di servizio. È possibile trovare l'ID cliente del tuo account di servizio nel Service accounts page.
+Negli ambiti OAuth campo (delimitato da virgole), inserire l'elenco degli ambiti che l'applicazione deve essere concesso l'accesso a. Ad esempio, se l'applicazione ha bisogno di accedere a livello di dominio completo alle API di Google Drive e l'API di Google Calendar, immettere: https://www.googleapis.com/auth/drive, https://www.googleapis.com/auth calendario /.
+Fare clic su Autorizza.

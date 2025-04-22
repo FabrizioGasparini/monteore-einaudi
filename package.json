@@ -1,0 +1,39 @@
+{
+  "name": "einaudi-monteore",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.5.0",
+    "@heroicons/react": "^1.0.6",
+    "@prisma/client": "^3.15.2",
+    "googleapis": "^100.0.0",
+    "html-to-docx": "^1.8.0",
+    "i": "^0.3.7",
+    "next": "12.1.2",
+    "next-auth": "^4.3.1",
+    "npm": "^9.6.3",
+    "react": "18.0.0",
+    "react-dom": "18.0.0",
+    "react-google-button": "^0.7.2",
+    "sharp": "^0.30.3",
+    "swr": "^1.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "17.0.23",
+    "@types/react": "17.0.43",
+    "@types/react-dom": "17.0.14",
+    "autoprefixer": "^10.4.4",
+    "eslint": "8.12.0",
+    "eslint-config-next": "12.1.2",
+    "postcss": "^8.4.12",
+    "prisma": "^3.15.2",
+    "tailwindcss": "^3.0.23",
+    "typescript": "4.6.3"
+  }
+}
