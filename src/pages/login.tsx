@@ -25,7 +25,7 @@ const Login: NextPage = () => {
                     onClick={() => signIn('google')}
                     />
             </div>
-            <footer className='fixed bottom-0 left-0 right-0 flex justify-center items-center p-4 border-t-2 border-solid border-[#aaa] bg-[#181818]'>
+            <footer className='w-full mt-4 flex justify-center items-center p-4 border-t-2 border-solid border-[#aaa] bg-[#181818]'>
                 <p className='text-[#666]'>Realizzato da <a href="https://www.instagram.com/fabri.gaspa_/" className="underline decoration-1 transition-all hover:text-white hover:text-lg" > Fabrizio Gasparini</a> e <a href="https://www.instagram.com/manu_ghizzo/" className="underline decoration-1 transition-all hover:text-white hover:text-lg">Manuel Ghizzoni</a></p>
             </footer>
         </div>

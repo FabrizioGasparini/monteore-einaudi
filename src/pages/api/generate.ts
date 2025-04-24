@@ -27,7 +27,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
                 })} - ${activity.endTime.toLocaleString("it-IT", {
                     hour: "numeric",
                     minute: "2-digit",
-                })}</h6><table style="width: 100%;"><tr><th>Nome e Cognome</th></tr>${await Promise.all(activity.subscriptions.map(async (subscription) => `<tr><td>${subscription.name}</td></tr>`))}</table>`
+                })}</h6><table style="width: 100%;"><tr><th>Nome e Cognome</th><th>Email</th></tr>${await Promise.all(activity.subscriptions.map(async (subscription) => `<tr><td>${subscription.name}</td><td>${subscription.email}</td></tr>`))}</table>`
         )
     );
 

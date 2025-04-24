@@ -159,6 +159,30 @@ export default function ManageActivities() {
         setActivityId(id)
     }
 
+    const generateDocx = () => {
+        fetch("/api/generate", {
+            credentials: 'include',
+            method: "GET",
+            cache: "no-cache",
+            headers: new Headers({
+                "Accept": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            })
+        })
+            .then((response) => {
+                response.blob().then((blob) => {
+                  let url = window.URL.createObjectURL(blob);
+                  let a = document.createElement("a");
+                  a.href = url;
+                  a.download = `dati_monteore_${new Date().toISOString().split("T")[0]}.docx`;
+                  a.click();
+                });
+            })
+            .catch((e) => {
+                alert("Si è verificato un errore. Riprova")
+            })
+    }
+
     const today = new Date()
     return (
         <>
@@ -199,6 +223,8 @@ export default function ManageActivities() {
                             <option value="piene">Piene</option>
                             <option value="scadute">Scadute</option>
                         </select>
+
+                        <button onClick={() => generateDocx()} type="button" className='mt-4 p-3 w-[97%] cursor-pointer text-base font-medium rounded-xl bg-[#4c3fff] transition-all ease-in-out hover:scale-[1.02]'>Scarica Dati</button>
                     </div>
                     <ul role="list" className="flex flex-wrap gap-4 items-center justify-center w-full" >
                         <li className='bg-[#282828] border-solid border-gray-700 border-2 rounded-xl p-4 w-[30%]'>
@@ -240,7 +266,7 @@ export default function ManageActivities() {
                                                     : <span className='mt-4 p-1 w-full text-base font-regular rounded-xl text-[#00ff00]'>Iscrizioni aperte</span>
                                         }
                                         <div className="flex gap-2">
-                                            <button onClick={() => watchActivity(activity.id)} type="button" className='mt-4 p-3 w-1/4 cursor-pointer text-base font-medium rounded-xl bg-[#00e200] transition-all ease-in-out hover:scale-[1.05]'>Partecipanti</button>
+                                            <button onClick={() => watchActivity(activity.id)} type="button" className='mt-4 p-3 w-1/4 cursor-pointer text-base font-medium rounded-xl bg-[#00e200] transition-all ease-in-out hover:scale-[1.05]'>Attività</button>
                                             <button onClick={() => editActivity(activity.id)} type="button" className='mt-4 p-3 w-1/2 cursor-pointer text-base font-medium rounded-xl bg-[#4c3fff] transition-all ease-in-out hover:scale-[1.02]'>Modifica</button>
                                             <button onClick={() => deleteActivity(activity.id)} type="button" className='mt-4 p-3 w-1/4 cursor-pointer text-base font-medium rounded-xl bg-[#ff0000] transition-all ease-in-out hover:scale-[1.05]'>Elimina</button>
                                         </div>
