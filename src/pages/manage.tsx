@@ -45,6 +45,7 @@ export default function ManageActivities() {
 
     const [nomeEdit, setNomeEdit] = useState("")
     const [aulaEdit, setAulaEdit] = useState("")
+    const [descEdit, setDescEdit] = useState("")
     const [dataEdit, setDataEdit] = useState("")
     const [oraInizioEdit, setOraInizioEdit] = useState("")
     const [oraFineEdit, setOraFineEdit] = useState("")
@@ -62,7 +63,7 @@ export default function ManageActivities() {
         fetch("/api/edit", {
             credentials: 'include',
             method: "PUT",
-            body: JSON.stringify({ id, name: nomeEdit, aula: aulaEdit, date: dataEdit, startTime: oraInizioEdit, endTime: oraFineEdit, maxNumber: maxIscrittiEdit }),
+            body: JSON.stringify({ id, name: nomeEdit, aula: aulaEdit, desc:descEdit, date: dataEdit, startTime: oraInizioEdit, endTime: oraFineEdit, maxNumber: maxIscrittiEdit }),
             cache: "no-cache",
             headers: new Headers({
                 "Accept": "application/json",
@@ -84,6 +85,7 @@ export default function ManageActivities() {
         setIsCreating(false)
         setNomeEdit(activities.find((activity: Activity) => activity.id === id)?.name!)
         setAulaEdit(activities.find((activity: Activity) => activity.id === id)?.location!)
+        setDescEdit(activities.find((activity: Activity) => activity.id === id)?.description!)
 
         const startTime = new Date(activities.find((activity: Activity) => activity.id === id)?.startTime!)
         setDataEdit(startTime.toISOString().split('T')[0])
@@ -99,7 +101,8 @@ export default function ManageActivities() {
         setIsCreating(true)
         setNomeEdit("")
         setAulaEdit("")
-        setDataEdit("")
+        setDescEdit("")
+        setDataEdit("2025-05-12")
         setOraInizioEdit("")
         setOraFineEdit("")
         setMaxIscrittiEdit(0)
@@ -109,7 +112,7 @@ export default function ManageActivities() {
         fetch("/api/create", {
             credentials: 'include',
             method: "POST",
-            body: JSON.stringify({ name: nomeEdit, aula: aulaEdit, date: dataEdit, startTime: oraInizioEdit, endTime: oraFineEdit, maxNumber: maxIscrittiEdit }),
+            body: JSON.stringify({ name: nomeEdit, aula: aulaEdit, desc:descEdit, date: dataEdit, startTime: oraInizioEdit, endTime: oraFineEdit, maxNumber: maxIscrittiEdit }),
             cache: "no-cache",
             headers: new Headers({
                 "Accept": "application/json",
@@ -174,7 +177,7 @@ export default function ManageActivities() {
                   let url = window.URL.createObjectURL(blob);
                   let a = document.createElement("a");
                   a.href = url;
-                  a.download = `dati_monteore_${new Date().toISOString().split("T")[0]}.docx`;
+                  a.download = `dati_monteore_${new Date().toISOString().split("T")[0]}.xlsx`;
                   a.click();
                 });
             })
@@ -188,12 +191,12 @@ export default function ManageActivities() {
         <>
             <div className='min-h-screen h-full flex flex-col px-4 py-4 w-full'>
                 <div className="shadow overflow-hidden sm:rounded-md">
-                    <div className="flex flex-wrap gap-4 justify-center items-center p-4 mx-4">
+                <div className="flex flex-wrap gap-4 justify-center items-center p-4 mx-4">
                         <label htmlFor='nome' className='flex items-center gap-2'>Cerca per nome: </label>
-                        <input type="text" id="nome" placeholder="Es. Laboratorio Arduino" onChange={(e) => setNome(e.target.value)} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]'/>
+                        <input type="text" id="nome" placeholder="Es. Laboratorio Arduino" onChange={(e) => setNome(e.target.value)} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff] w-full xl:w-fit'/>
 
                         <label htmlFor='giorno' className='flex items-center gap-2'>Giorno:</label>
-                        <select id="giorno" onChange={(e) => setGiorno(Number(e.target.value))} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]'>
+                        <select id="giorno" onChange={(e) => setGiorno(Number(e.target.value))} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff] w-full xl:w-fit'>
                             <option value="0">Tutti</option>
                             <option value="1">Lunedì</option>
                             <option value="2">Martedì</option>
@@ -204,7 +207,7 @@ export default function ManageActivities() {
                         </select>
 
                         <label htmlFor='ora' className='flex items-center gap-2'>Ora:</label>
-                        <select id="ora" onChange={(e) => setOra(Number(e.target.value))} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]'>
+                        <select id="ora" onChange={(e) => setOra(Number(e.target.value))} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff] w-full xl:w-fit'>
                             <option value="0">Tutte</option>
                             <option value="8">08:00</option>
                             <option value="9">09:00</option>
@@ -217,7 +220,7 @@ export default function ManageActivities() {
                         </select>
 
                         <label htmlFor='stato' className='flex items-center gap-2'>Stato Iscrizioni:</label>
-                        <select id="stato" onChange={(e) => setStato(e.target.value)} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]'>
+                        <select id="stato" onChange={(e) => setStato(e.target.value)} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff] w-full xl:w-fit'>
                             <option value="tutte">Tutte</option>
                             <option value="aperte">Aperte</option>
                             <option value="piene">Piene</option>
@@ -226,8 +229,8 @@ export default function ManageActivities() {
 
                         <button onClick={() => generateDocx()} type="button" className='mt-4 p-3 w-[97%] cursor-pointer text-base font-medium rounded-xl bg-[#4c3fff] transition-all ease-in-out hover:scale-[1.02]'>Scarica Dati</button>
                     </div>
-                    <ul role="list" className="flex flex-wrap gap-4 items-center justify-center w-full" >
-                        <li className='bg-[#282828] border-solid border-gray-700 border-2 rounded-xl p-4 w-[30%]'>
+                    <ul role="list" className="flex flex-wrap gap-4 items-center justify-center w-full mt-4" >
+                        <li className='bg-[#282828] border-solid border-gray-700 border-2 rounded-xl p-4 w-[100%] lg:w-[30%]'>
                             <h3 title="Crea Attività" className='my-2 text-xl font-bold text-ellipsis overflow-hidden whitespace-nowrap'>Crea Attività</h3>
                             <div className="text-sm text-gray-400 mx-1">📍 Aula</div>
                             <div className="text-sm text-gray-400 mx-1">📆 Data</div>
@@ -252,7 +255,7 @@ export default function ManageActivities() {
                                 const startTime = new Date(activity.startTime);
                                 const endTime = new Date(activity.endTime);
                                 return (
-                                    <li className='bg-[#282828] border-solid border-gray-700 border-2 rounded-xl p-4 w-[30%]' key={activity.id}>
+                                    <li className='bg-[#282828] border-solid border-gray-700 border-2 rounded-xl p-4 w-[100%] lg:w-[30%]' key={activity.id}>
                                         <h3 title={activity.name} className='my-2 text-xl font-bold text-ellipsis overflow-hidden whitespace-nowrap'>{activity.name}</h3>
                                         <div className="text-sm text-gray-400 mx-1">📍 {activity.location.toUpperCase()}</div>
                                         <div className="text-sm text-gray-400 mx-1">📆 {formatDate(startTime).toUpperCase()}</div>
@@ -265,10 +268,10 @@ export default function ManageActivities() {
                                                     ? <span className='mt-4 p-1 w-full cursor-not-allowed text-base font-regular rounded-xl text-[#ff0000]'>Attività Piena! Iscrizioni chiuse</span>
                                                     : <span className='mt-4 p-1 w-full text-base font-regular rounded-xl text-[#00ff00]'>Iscrizioni aperte</span>
                                         }
-                                        <div className="flex gap-2">
-                                            <button onClick={() => watchActivity(activity.id)} type="button" className='mt-4 p-3 w-1/4 cursor-pointer text-base font-medium rounded-xl bg-[#00e200] transition-all ease-in-out hover:scale-[1.05]'>Attività</button>
-                                            <button onClick={() => editActivity(activity.id)} type="button" className='mt-4 p-3 w-1/2 cursor-pointer text-base font-medium rounded-xl bg-[#4c3fff] transition-all ease-in-out hover:scale-[1.02]'>Modifica</button>
-                                            <button onClick={() => deleteActivity(activity.id)} type="button" className='mt-4 p-3 w-1/4 cursor-pointer text-base font-medium rounded-xl bg-[#ff0000] transition-all ease-in-out hover:scale-[1.05]'>Elimina</button>
+                                        <div className="flex gap-1 lg:gap-2 flex-col lg:flex-row">
+                                            <button onClick={() => watchActivity(activity.id)} type="button" className='mt-4 p-3 w-full lg:w-1/4 cursor-pointer text-base font-medium rounded-xl bg-[#00e200] transition-all ease-in-out hover:scale-[1.05]'>Attività</button>
+                                            <button onClick={() => editActivity(activity.id)} type="button" className='mt-4 p-3 w-full lg:w-1/2 cursor-pointer text-base font-medium rounded-xl bg-[#4c3fff] transition-all ease-in-out hover:scale-[1.02]'>Modifica</button>
+                                            <button onClick={() => deleteActivity(activity.id)} type="button" className='mt-4 p-3 w-full lg:w-1/4 cursor-pointer text-base font-medium rounded-xl bg-[#ff0000] transition-all ease-in-out hover:scale-[1.05]'>Elimina</button>
                                         </div>
                                     </li>
                                 )
@@ -278,7 +281,7 @@ export default function ManageActivities() {
             </div>
             {
                 isEditing ?
-                <div className='fixed h-fit w-9/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#252525] rounded-lg bg-opacity-80 text-center p-4 border-gray-400 border-2 shadow-lg'>
+                <div className='fixed h-fit w-9/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#252525] rounded-lg bg-opacity-80 text-center p-4 border-gray-400 border-2 shadow-lg max-h-[90%] overflow-y-scroll'>
                     <div className="topbar">
                         <h2 className='text-2xl font-bold'>{isCreating ? "Crea" : "Modifica"} Attività</h2>
                         <button onClick={() => setIsEditing(false)} className='absolute top-4 right-4 text-red-400 hover:text-red-600 transition-colors duration-200 ease-in-out'>✖</button>        
@@ -298,6 +301,9 @@ export default function ManageActivities() {
                     
                         <label htmlFor='aula' className='flex items-center gap-2'>Aula: </label>
                         <input type="text" id="aula" placeholder="Es. A05" onChange={(e) => setAulaEdit(e.target.value)} value={aulaEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
+                    
+                        <label htmlFor='desc' className='flex items-center gap-2'>Descrizione: </label>
+                        <textarea id="desc" placeholder="Descrizione Attività" onChange={(e) => setDescEdit(e.target.value)} value={descEdit} rows={5} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
 
                         <label htmlFor='data' className='flex items-center gap-2'>Data: </label>
                         <input type="date" id="data" onChange={(e) => setDataEdit(e.target.value)} value={dataEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
@@ -317,17 +323,17 @@ export default function ManageActivities() {
             }
             {
                 isWatching ?
-                <div className='fixed h-fit w-9/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#252525] rounded-lg bg-opacity-80 text-center p-4 border-gray-400 border-2 shadow-lg'>
+                <div className='fixed h-fit w-9/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#252525] rounded-lg bg-opacity-80 text-center p-4 border-gray-400 border-2 shadow-lg max-h-[90%] overflow-y-scroll'>
                     <div className="topbar">
                         <h2 className='text-2xl font-bold'>Partecipanti Attività</h2>
                         <button onClick={() => setIsWatching(false)} className='absolute top-4 right-4 text-red-400 hover:text-red-600 transition-colors duration-200 ease-in-out'>✖</button>        
                     </div>
-                    <ul role="list" className="flex flex-wrap gap-4 mt-4 items-center justify-center w-full overflow-y-scroll" >
+                    <ul role="list" className="flex flex-wrap gap-4 mt-4 items-center justify-center w-full overflow-y-scroll max-h-[90%] h-fit" >
                             {
                             activities.find((activity: Activity) => activity.id == activityId).subscriptions?.length == 0 ? <p>Nessuna iscrizione trovata</p> :
                             activities.find((activity: Activity) => activity.id == activityId).subscriptions?.map((subscription: Subscription) => {
                                 return (
-                                    <li className='bg-[#282828] border-solid border-gray-700 border-2 rounded-xl p-4 w-[30%]' key={subscription.id}>
+                                    <li className='bg-[#282828] border-solid border-gray-700 border-2 rounded-xl p-4 w-full lg:w-[30%]' key={subscription.id}>
                                         <h3 title={subscription.name} className='my-2 text-xl font-bold text-ellipsis overflow-hidden whitespace-nowrap'>{subscription.name}</h3>
                                         <div className="text-sm text-gray-400 mx-1">📧 {subscription.email}</div>
                                     </li>

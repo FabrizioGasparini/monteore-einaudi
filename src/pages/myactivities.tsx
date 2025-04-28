@@ -47,7 +47,7 @@ export default function MyActivities() {
                             const startTime = new Date(activity.startTime);
                             const endTime = new Date(activity.endTime);
                             return (
-                                <li className='bg-[#282828] border-solid border-gray-700 border-2 rounded-xl p-4 w-[30%]' key={activity.id}>
+                                <li className='bg-[#282828] border-solid border-gray-700 border-2 rounded-xl p-4 w-[100%] lg:w-[30%]' key={activity.id}>
                                     <h3 title={activity.name} className='my-2 text-xl font-bold text-ellipsis overflow-hidden whitespace-nowrap'>{activity.name}</h3>
                                     <div className="text-sm text-gray-400 mx-1">📍 {activity.location.toUpperCase()}</div>
                                     <div className="text-sm text-gray-400 mx-1">📆 {formatDate(startTime).toUpperCase()}</div>

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
-import HTMLtoDOCX from "html-to-docx";
+import ExcelJS from "exceljs";
 
 const prisma = new PrismaClient();
 
@@ -13,29 +13,51 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
             startTime: "asc",
         },
     });
-    if (!activities) return res.status(200).json([]);
 
-    const activitiesHTML = await Promise.all(
-        activities.map(
-            async (activity) =>
-                `<h1>${activity.name} in ${activity.location}</h1><h6>${activity.startTime.toLocaleString("it-IT", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "2-digit",
-                })} - ${activity.endTime.toLocaleString("it-IT", {
-                    hour: "numeric",
-                    minute: "2-digit",
-                })}</h6><table style="width: 100%;"><tr><th>Nome e Cognome</th><th>Email</th></tr>${await Promise.all(activity.subscriptions.map(async (subscription) => `<tr><td>${subscription.name}</td><td>${subscription.email}</td></tr>`))}</table>`
-        )
-    );
+    const workbook = new ExcelJS.Workbook();
+    workbook.creator = "Iscrizioni Monteore";
+    workbook.created = new Date();
 
-    const file = await HTMLtoDOCX(activitiesHTML.join('<div class="page-break" style="page-break-after: always;"></div>'), "", { title: "Iscrizioni monteore" }, "");
-    res.setHeader("Content-disposition", "attachment; filename=Iscrizioni Monteore.docx");
-    res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+    for (const activity of activities) {
+        const sheetName = activity.name.substring(0, 31); // Excel sheet names must be max 31 chars
+        const worksheet = workbook.addWorksheet(sheetName);
 
-    res.status(200).send(file);
+        // Header
+        worksheet.addRow([`${activity.name} - ${activity.location}`]);
+        worksheet.addRow([
+            `${activity.startTime.toLocaleString("it-IT", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+            })} - ${activity.endTime.toLocaleString("it-IT", {
+                hour: "2-digit",
+                minute: "2-digit",
+            })}`,
+        ]);y
+        worksheet.addRow([]); // Empty row
+
+        // Table headers
+        worksheet.addRow(["Nome e Cognome", "Email", "Classe"]);
+
+        // Add subscriptions
+        activity.subscriptions.forEach((sub) => {
+            worksheet.addRow([sub.name, sub.email, sub.class]);
+        });
+
+        worksheet.columns.forEach((column) => {
+            column.width = 30; // Set default column width
+        });
+    }
+
+    // Scrivi il file in memoria
+    const buffer = await workbook.xlsx.writeBuffer();
+
+    // Imposta intestazioni e invia il file
+    res.setHeader("Content-Disposition", "attachment; filename=Iscrizioni_Monteore.xlsx");
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.status(200).send(Buffer.from(buffer));
 };
 
 export default handle;

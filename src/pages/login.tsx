@@ -15,7 +15,7 @@ const Login: NextPage = () => {
                     alt="Logo Einaudi"
                     />
                 
-                <h1 className='font-semibold text-lg'>Per continuare accedi con il tuo 
+                <h1 className='font-semibold text-lg text-center'>Per continuare accedi con il tuo 
                     <span className="underline decoration-1 text-yellow-200 m-1">ACCOUNT ISTITUZIONALE</span>
                 </h1>
                 

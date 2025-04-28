@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method !== "PUT") return res.status(400).json({ message: "Metodo non valido" });
 
-    const { id, name, aula, date, startTime, endTime, maxNumber } = req.body;
+    const { id, name, aula, desc, date, startTime, endTime, maxNumber } = req.body;
 
     if (!id) return res.status(400).json({ message: "Id non valido" });
     if (isNaN(Number(id))) return res.status(400).json({ message: "Id non valido" });
@@ -40,7 +40,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         },
     });
 
-    if (!name || !aula || !date || !startTime || !endTime || !maxNumber) return res.status(400).json({ message: "Dati non validi" });
+    if (!name || !aula || !desc || !date || !startTime || !endTime || !maxNumber) return res.status(400).json({ message: "Dati non validi" });
 
     const startDate = new Date(date);
     const endDate = new Date(date);
@@ -53,7 +53,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
 
     await prisma.activity.update({
         where: { id: Number(id) },
-        data: { name, location: aula, startTime: new Date(startDate), endTime: new Date(endDate), maxNumber },
+        data: { name, location: aula, description:desc, startTime: new Date(startDate), endTime: new Date(endDate), maxNumber },
     });
 
     return res.status(200).json({ message: "Attività aggiornata con successo!", activity, found: !!found });

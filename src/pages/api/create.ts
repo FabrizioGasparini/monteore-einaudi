@@ -7,12 +7,12 @@ const prisma = new PrismaClient();
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method !== "POST") return res.status(400).json({ message: "Metodo non valido" });
 
-    const { name, aula, date, startTime, endTime, maxNumber } = req.body;
+    const { name, aula, desc, date, startTime, endTime, maxNumber } = req.body;
 
     const session = await getSession({ req });
     if (!session) return res.status(400).json({ message: "Autenticazione richiesta!" });
 
-    if (!name || !aula || !date || !startTime || !endTime || !maxNumber) return res.status(400).json({ message: "Dati non validi" });
+    if (!name || !aula || !desc || !date || !startTime || !endTime || !maxNumber) return res.status(400).json({ message: "Dati non validi" });
 
     const startDate = new Date(date);
     const endDate = new Date(date);
@@ -24,7 +24,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!Number.isInteger(maxNumber) || maxNumber <= 0) return res.status(400).json({ message: "Il numero massimo deve essere un numero intero positivo" });
 
     const activity = await prisma.activity.create({
-        data: { name, location: aula, startTime: new Date(startDate), endTime: new Date(endDate), maxNumber },
+        data: { name, location: aula, description: desc, startTime: new Date(startDate), endTime: new Date(endDate), maxNumber },
     });
     return res.status(200).json({ message: "Attività aggiornata con successo!", activity });
 };

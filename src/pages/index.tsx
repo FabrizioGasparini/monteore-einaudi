@@ -1,7 +1,6 @@
 import type { NextPage } from 'next'
 import { useSession } from 'next-auth/react'
 import { signOut } from "next-auth/react"
-import styles from '../styles/Home.module.css'
 import Image from 'next/image'
 import logoOrizzontale from "../../public/logo_orizzontale.png"
 import { useEffect, useState } from 'react'
@@ -14,11 +13,12 @@ const Home: NextPage = () => {
     const user = session.data;
     const [page, setPage] = useState("activities")
     const [isAdmin, setIsAdmin] = useState(false)
-
+    
+    const [classeUser, setClasseUser] = useState("")
     const name = user?.user?.name?.split(" ")[0];
 
     const admin = () => {
-        fetch("/api/admin", {
+        fetch("/api/user", {
             credentials: 'include',
             method: "POST",
             body: null,
@@ -30,6 +30,7 @@ const Home: NextPage = () => {
         })
         .then((res) => { return res.json() })
         .then((data) => {
+            setClasseUser(data.user.class)
             setIsAdmin(data.admin)
             return data
         })
@@ -42,22 +43,24 @@ const Home: NextPage = () => {
         admin()
     }, [isAdmin])
 
+    console.log(user)
+
     return (
         <div className='w-full min-h-screen h-full bg-[#181818]'>
             <header className='flex items-center justify-center flex-col p-2'>
                 <Image src={logoOrizzontale} alt="Logo Orizzontale" height={150} width={630} />
-                <h1 className='text-6xl mt-10'>BENVENUTO {name}!</h1>
+                <h1 className='text-6xl mt-10 text-center'>BENVENUTO {name}!</h1>
             </header>
-            <main className="min-h-screen px-16 pt-8 flex-1 flex flex-col justify-center items-center">
+            <main className="min-h-screen px-16 pt-8 flex-1 flex flex-col justify-center items-center text-center align-middle">
                 <nav className='flex justify-center gap-8 p-4 border-b-2 border-solid border-[#aaa]'>
                     <div className={`${page == "activities" ? "text-[#ffff00]" : "text-[#666]"} font-medium pb-2 cursor-pointer`} onClick={() => setPage("activities")}>LISTA ATTIVITÀ</div>
                     <div className={`${page == "myactivities" ? "text-[#ffff00]" : "text-[#666]"} font-medium pb-2 cursor-pointer`} onClick={() => setPage("myactivities")}>LE MIE ATTIVITÀ</div>
                     {isAdmin ? <div className={`${page == "manageactivities" ? "text-[#ffff00]" : "text-[#666]"} font-medium pb-2 cursor-pointer`} onClick={() => setPage("manageactivities")}>GESTISCI ATTIVITÀ</div> : ""}
-                    <div className="text-[#666] font-medium pb-2 cursor-pointer" onClick={() => signOut()}>ESCI</div>
+                    <div className="text-[#666] font-medium pb-2 cursor-pointer align-middle" onClick={() => signOut()}>ESCI</div>
                 </nav>
                 {
                     page == "activities"
-                        ? <Activities email={user?.user?.email!} />
+                        ? <Activities email={user?.user?.email!} classe={classeUser} />
                         : page == "myactivities"
                             ? < MyActivities />
                             : < ManageActivities />

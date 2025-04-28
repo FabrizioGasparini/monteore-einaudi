@@ -26,6 +26,11 @@ model LoginExclude {
   email String @id
 }
 
+model User {
+  email String @id
+  class String
+}
+
 model AdminList {
   email String @id
 }
@@ -34,6 +39,7 @@ model Subscription {
   id Int @id @default(autoincrement())
   email String
   name  String
+  class String
   activity Activity @relation(references: [id], fields: [activityId])
   activityId Int
 

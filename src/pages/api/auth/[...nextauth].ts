@@ -32,6 +32,16 @@ export default NextAuth({
     callbacks: {
         async signIn({ account, profile }: { account: any; profile: any }) {
             if (account.provider === "google") {
+                const userData = await service.users.get({ userKey: profile.email });
+                if (!userData.data.orgUnitPath) return false;
+
+                console.log(userData);
+
+                const studenteData = userData.data.orgUnitPath.split("/");
+                if (studenteData[1] !== "Studenti") return false;
+
+                const classe = studenteData[2]
+
                 const excluded = await prisma.loginExclude.count({
                     where: {
                         email: profile.email,
@@ -42,18 +52,25 @@ export default NextAuth({
                         email: profile.email,
                     },
                 });
+
+                const user = await prisma.user.findFirst({
+                    where: {
+                        email: profile.email,
+                    }
+                })
+
+                if(!user) {
+                    await prisma.user.create({ data: {
+                            email: profile.email,
+                            class: classe
+                        }
+                    })
+                }
+
                 if (!!excluded || !!admin) {
                     console.log(profile.email + " logged in with Login Exclusion or Admin List");
                     return true;
                 }
-
-                const userData = await service.users.get({ userKey: profile.email });
-                if (!userData.data.orgUnitPath) return false;
-
-                console.log(userData);
-
-                const studenteData = userData.data.orgUnitPath.split("/");
-                if (studenteData[1] !== "Studenti") return false;
 
                 const classeNumero = Number(studenteData[2][0]);
                 return classeNumero >= 3 && profile.email.endsWith("@einaudicorreggio.it");

@@ -15,6 +15,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const email = session.user?.email as string;
         const activityId = req.body.id;
+        const classe = req.body.class;
         const activity = await prisma.activity.findFirst({
             where: {
                 id: activityId,
@@ -78,6 +79,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
                         id: activityId,
                     },
                 },
+                class: classe
             },
             select: {
                 activity: true,
