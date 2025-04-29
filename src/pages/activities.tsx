@@ -24,7 +24,7 @@ export type Activity = {
     }
 }
 
-export const closingDate = new Date("2025-05-30T12:30:00Z")
+export const closingDate = new Date("2025-05-12T00:00:00Z")
 
 const dateOptions = { timeZone: 'UTC', month: 'long', weekday:'long', day: 'numeric', year: 'numeric'};
 
@@ -84,9 +84,10 @@ export default function Activities({ email, classe }: { email: string, classe: s
         })
         .then((res) => { return res.json() })
         .then((data) => {
-            if (data.status !== 200) {
-                alert(data.message)
-            }
+            if (data.status !== 200) alert(data.message)
+            else alert("Iscrizione avvenuta con successo!")
+            
+            setShowActivity(false)
             window.location.reload()
             return data
         })
@@ -166,7 +167,7 @@ export default function Activities({ email, classe }: { email: string, classe: s
                                                 ? <button type="button" disabled className='mt-4 p-3 w-full cursor-not-allowed text-base font-medium rounded-xl bg-[#ff0000]'>Tempo per l&apos;iscrizione terminato! Iscrizioni chiuse</button>
                                                 : activity._count!.subscriptions >= activity.maxNumber
                                                     ? <button type="button" disabled className='mt-4 p-3 w-full cursor-not-allowed text-base font-medium rounded-xl bg-[#ff0000]'>Attività Piena! Iscrizioni chiuse</button>
-                                                    : <button onClick={() => subscribeToEvent(activity.id)} type="button" className='mt-4 p-3 w-full cursor-pointer text-base font-medium rounded-xl bg-[#4c3fff] transition-all ease-in-out hover:scale-[1.02]'>Iscriviti</button>
+                                                    : <button type="button" className='mt-4 p-3 w-full cursor-pointer text-base font-medium rounded-xl bg-[#4c3fff] transition-all ease-in-out hover:scale-[1.02]'>Iscriviti</button>
                                         }
                                     </li>
                                 )
@@ -175,6 +176,7 @@ export default function Activities({ email, classe }: { email: string, classe: s
                 </div>
             </div>
             {
+                
                 showActivity ?
                 <div className='fixed h-fit w-9/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#252525] rounded-lg bg-opacity-80 text-center p-4 border-gray-400 border-2 shadow-lg max-h-[90%] overflow-y-scroll resize-none'>
                     <div className="topbar">
@@ -182,7 +184,16 @@ export default function Activities({ email, classe }: { email: string, classe: s
                         <button onClick={() => setShowActivity(false)} className='absolute top-4 right-4 text-red-400 hover:text-red-600 transition-colors duration-200 ease-in-out'>✖</button>        
                     </div>
                     
-                    <div className='flex flex-col gap-4 max-h-[90%]'>
+                        <form className='flex flex-col gap-4 max-h-[90%]' onSubmit={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+
+                            if (today > closingDate || today > new Date(activities.find((activity: Activity) => activity.id === activityId)?.startTime!)) {
+                                alert("Tempo per l'iscrizione terminato! Iscrizioni chiuse")
+                                return
+                            }
+                            subscribeToEvent(activityId)
+                        }}>
                         <label htmlFor='nome' className='flex items-center gap-2'>Nome Attività: </label>
                         <input type="text" id="nome" placeholder="Es. Laboratorio Arduino" contentEditable={false} value={nomeEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
                     
@@ -190,7 +201,7 @@ export default function Activities({ email, classe }: { email: string, classe: s
                         <input type="text" id="aula" placeholder="Es. A05" contentEditable={false} value={aulaEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
                     
                         <label htmlFor='desc' className='flex items-center gap-2'>Descrizione: </label>
-                        <textarea name="desc" id="desc" rows={5} placeholder="Descrizione Attività" contentEditable={false} value={descEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff] h-fit'></textarea>
+                        <textarea id="desc" rows={5} placeholder="Descrizione Attività" contentEditable={false} value={descEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff] h-fit'></textarea>
 
                         <label htmlFor='data' className='flex items-center gap-2'>Data: </label>
                         <input type="date" id="data" contentEditable={false} value={dataEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff] overflow-y-scroll whitespace-nowrap' />
@@ -203,7 +214,15 @@ export default function Activities({ email, classe }: { email: string, classe: s
 
                         <label htmlFor='maxIscritti' className='flex items-center gap-2'>Max Iscritti: </label>
                         <input type="number" id="maxIscritti" placeholder="Es. 20" value={Number(maxIscrittiEdit)} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
-                    </div>
+                    
+                        {        
+                            today > closingDate || today > new Date(activities.find((activity: Activity) => activity.id === activityId)?.startTime!)
+                                ? <button type="button" disabled className='mt-4 p-3 w-full cursor-not-allowed text-base font-medium rounded-xl bg-[#ff0000]'>Tempo per l&apos;iscrizione terminato! Iscrizioni chiuse</button>
+                                : activities.find((activity: Activity) => activity.id === activityId)?._count?.subscriptions! >= activities.find((activity: Activity) => activity.id === activityId)?.maxNumber
+                                    ? <button type="button" disabled className='mt-4 p-3 w-full cursor-not-allowed text-base font-medium rounded-xl bg-[#ff0000]'>Attività Piena! Iscrizioni chiuse</button>
+                                    : <button onClick={() => subscribeToEvent(activityId)} type="submit" className='mt-4 p-3 w-full cursor-pointer text-base font-medium rounded-xl bg-[#4c3fff] transition-all ease-in-out hover:scale-[1.02]'>Iscriviti</button>
+                        }
+                        </form>
                 </div> : ''
             }
         </>

@@ -12,7 +12,6 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
           <title key={"title"}>Monteore Einaudi</title>
           <meta name="description" content="Iscriviti al monteore einaudi" />
           <link rel="icon" href="/logo.ico" />
-          <link href='https://fonts.googleapis.com/css?family=Lexend' rel='stylesheet' />
         </Head>
           <Component {...pageProps} />
         </AuthGuard>

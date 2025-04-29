@@ -35,12 +35,10 @@ export default NextAuth({
                 const userData = await service.users.get({ userKey: profile.email });
                 if (!userData.data.orgUnitPath) return false;
 
-                console.log(userData);
-
                 const studenteData = userData.data.orgUnitPath.split("/");
                 if (studenteData[1] !== "Studenti") return false;
 
-                const classe = studenteData[2]
+                const classe = studenteData[2];
 
                 const excluded = await prisma.loginExclude.count({
                     where: {
@@ -56,15 +54,16 @@ export default NextAuth({
                 const user = await prisma.user.findFirst({
                     where: {
                         email: profile.email,
-                    }
-                })
+                    },
+                });
 
-                if(!user) {
-                    await prisma.user.create({ data: {
+                if (!user) {
+                    await prisma.user.create({
+                        data: {
                             email: profile.email,
-                            class: classe
-                        }
-                    })
+                            class: classe,
+                        },
+                    });
                 }
 
                 if (!!excluded || !!admin) {
