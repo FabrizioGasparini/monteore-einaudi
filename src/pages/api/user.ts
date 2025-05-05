@@ -13,8 +13,8 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     const user = await prisma.user.findFirst({
         where: {
             email,
-        }
-    })
+        },
+    });
 
     const found = await prisma.adminList.findFirst({
         where: {

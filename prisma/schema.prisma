@@ -17,6 +17,7 @@ model Activity {
   description String @default("")
   startTime DateTime
   endTime DateTime
+  duration Int
   subscriptions Subscription[]
   maxNumber Int
   location String @default("")
@@ -40,8 +41,20 @@ model Subscription {
   email String
   name  String
   class String
+
   activity Activity @relation(references: [id], fields: [activityId])
   activityId Int
+  position Int
 
-  @@unique([activityId, email], name: "EmailActivity")
+
+  @@unique([activityId, email, position], name: "EmailActivity")
+}
+
+model Info {
+  tipo String @id
+  valore String
+}
+
+model ExcludedClasses {
+  classe String @id
 }

@@ -9,47 +9,29 @@ import MyActivities from './myactivities'
 import ManageActivities from './manage'
 
 const Home: NextPage = () => {
-    const session = useSession();
-    const user = session.data;
+    const { data: user } = useSession();
+    
     const [page, setPage] = useState("activities")
     const [isAdmin, setIsAdmin] = useState(false)
     
     const [classeUser, setClasseUser] = useState("")
     const name = user?.user?.name?.split(" ")[0];
 
-    const admin = () => {
-        fetch("/api/user", {
-            credentials: 'include',
-            method: "POST",
-            body: null,
-            cache: "no-cache",
-            headers: new Headers({
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            })
-        })
-        .then((res) => { return res.json() })
-        .then((data) => {
-            setClasseUser(data.user.class)
-            setIsAdmin(data.admin)
-            return data
-        })
-        .catch((e) => {
-            alert("Si è verificato un errore. Riprova")
-        })
-    }
-
     useEffect(() => {
-        admin()
-    }, [isAdmin])
-
-    console.log(user)
+        if (user?.user?.class) {
+            setClasseUser(user.user.class);
+        }
+        if (user?.user?.admin) {
+            setIsAdmin(user.user.admin);
+        }
+    }, [user]);
 
     return (
         <div className='w-full min-h-screen h-full bg-[#181818]'>
             <header className='flex items-center justify-center flex-col p-2'>
                 <Image src={logoOrizzontale} alt="Logo Orizzontale" height={150} width={630} />
                 <h1 className='text-6xl mt-10 text-center'>BENVENUTO {name}!</h1>
+                <p>{classeUser}</p>
             </header>
             <main className="min-h-screen px-16 pt-8 flex-1 flex flex-col justify-center items-center text-center align-middle">
                 <nav className='flex justify-center gap-8 p-4 border-b-2 border-solid border-[#aaa]'>
@@ -60,7 +42,7 @@ const Home: NextPage = () => {
                 </nav>
                 {
                     page == "activities"
-                        ? <Activities email={user?.user?.email!} classe={classeUser} />
+                        ? <Activities email={user?.user?.email!} classe={classeUser} classNumber={Number(classeUser[0])} />
                         : page == "myactivities"
                             ? < MyActivities />
                             : < ManageActivities />

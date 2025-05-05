@@ -67,14 +67,33 @@ export default NextAuth({
                 }
 
                 if (!!excluded || !!admin) {
-                    console.log(profile.email + " logged in with Login Exclusion or Admin List");
+                    //console.log(profile.email + " logged in with Login Exclusion or Admin List");
                     return true;
                 }
 
                 const classeNumero = Number(studenteData[2][0]);
-                return classeNumero >= 3 && profile.email.endsWith("@einaudicorreggio.it");
+                return classeNumero >= 1 && profile.email.endsWith("@einaudicorreggio.it");
             }
             return true;
+        },
+        async session({ session, token }) {
+            const user = await prisma.user.findFirst({
+                where: {
+                    email: session.user?.email,
+                },
+            });
+
+            if (user) session.user.class = user.class;
+
+            const admin = await prisma.adminList.findFirst({
+                where: {
+                    email: session.user?.email,
+                },
+            });
+
+            session.user.admin = admin ? true : false;
+
+            return session;
         },
     },
     pages: {

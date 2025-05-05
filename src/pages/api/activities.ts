@@ -11,7 +11,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
                     subscriptions: true,
                 },
             },
-            subscriptions: {},
+            subscriptions: true,
         },
         orderBy: {
             startTime: "asc",

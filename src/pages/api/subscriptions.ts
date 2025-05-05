@@ -21,17 +21,15 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
                             subscriptions: true,
                         },
                     },
+                    subscriptions: true,
                 },
             },
+            position: true,
         },
     });
     if (!subscribedActivities) return res.status(200).json([]);
 
-    return res.status(200).json(
-        subscribedActivities.map((activity) => {
-            return activity.activity;
-        })
-    );
+    return res.status(200).json(subscribedActivities);
 };
 
 export default handle;

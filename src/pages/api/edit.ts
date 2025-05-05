@@ -15,6 +15,13 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     const session = await getSession({ req });
     if (!session) return res.status(400).json({ message: "Autenticazione richiesta!" });
 
+    const found = await prisma.adminList.findFirst({
+        where: {
+            email,
+        },
+    });
+    if (!found) return res.status(403).json({ message: "Non hai i permessi per modificare un'attività!" });
+
     const email = session.user?.email as string;
     const activity = await prisma.activity.findFirst({
         where: {
@@ -53,7 +60,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
 
     await prisma.activity.update({
         where: { id: Number(id) },
-        data: { name, location: aula, description:desc, startTime: new Date(startDate), endTime: new Date(endDate), maxNumber },
+        data: { name, location: aula, description: desc, startTime: new Date(startDate), endTime: new Date(endDate), maxNumber },
     });
 
     return res.status(200).json({ message: "Attività aggiornata con successo!", activity, found: !!found });

@@ -13,6 +13,13 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     const session = await getSession({ req });
     if (!session) return res.status(400).json({ message: "Autenticazione richiesta!" });
 
+    const found = await prisma.adminList.findFirst({
+        where: {
+            email,
+        },
+    });
+    if (!found) return res.status(403).json({ message: "Non hai i permessi per eliminare un'attività!" });
+
     const activity = await prisma.activity.findFirst({
         where: {
             id: Number(id),

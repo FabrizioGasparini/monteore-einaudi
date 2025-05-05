@@ -15,6 +15,8 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const email = session.user?.email as string;
         const activityId = req.body.id;
+        const position = req.body.position;
+
         const activity = await prisma.activity.findFirst({
             where: {
                 id: activityId,
@@ -41,12 +43,12 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
                 EmailActivity: {
                     activityId: activity.id,
                     email: email,
+                    position,
                 },
             },
         });
         return res.status(200).json({ status: 200, message: "Iscrizione annullata!" });
     } catch (e) {
-        console.log(e);
         return res.status(400).json({ status: 400, message: "Si è verificato un errore durante l'annullamento dell'iscrizione all'attività." });
     }
 };

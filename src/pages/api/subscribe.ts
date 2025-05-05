@@ -16,16 +16,14 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         const email = session.user?.email as string;
         const activityId = req.body.id;
         const classe = req.body.class;
+        const position = req.body.position;
+
         const activity = await prisma.activity.findFirst({
             where: {
                 id: activityId,
             },
             select: {
-                _count: {
-                    select: {
-                        subscriptions: true,
-                    },
-                },
+                subscriptions: true,
                 maxNumber: true,
                 startTime: true,
                 endTime: true,
@@ -34,14 +32,20 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         });
         if (!activity) return res.status(400).json({ status: 400, message: "Attività inesistente." });
 
+        let count = 0;
+        for (let i = 0; i < activity.subscriptions.length; i++) {
+            const subscription = activity.subscriptions[i];
+            if (subscription.position == position) count += 1;
+        }
+
         if (today.getTime() - activity.startTime.getTime() > 0) return res.status(400).json({ status: 400, message: "Non puoi iscriverti, l'attività è già iniziata" });
-        if (activity._count.subscriptions >= activity.maxNumber) return res.status(400).json({ status: 400, message: "Numero massimo partecipanti raggiunta" });
+        if (count >= activity.maxNumber) return res.status(400).json({ status: 400, message: "Numero massimo partecipanti raggiunta" });
 
         const alreadySubscribed = await prisma.subscription.findFirst({
             where: {
                 OR: [
                     {
-                        email: email,
+                        email,
                         activity: {
                             startTime: {
                                 lt: activity.endTime,
@@ -50,17 +54,8 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
                                 gt: activity.startTime,
                             },
                         },
-                    },
-                    {
-                        email: email,
-                        activity: {
-                            startTime: activity.startTime,
-                            endTime: activity.endTime,
-                        },
-                    },
-                    {
                         activityId,
-                        email,
+                        position,
                     },
                 ],
             },
@@ -69,6 +64,14 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
             },
         });
         if (!!alreadySubscribed) return res.status(400).json({ status: 400, message: "Sei già iscritto ad una attività durante questa fascia oraria!" });
+
+        const excludedClasses = await prisma.excludedClasses.find({
+            where: {
+                classe,
+            },
+        });
+        console.log(excludedClasses);
+        if (excludedClasses) return res.status(400).json({ status: 400, message: "Non puoi iscriverti a questa attività!" });
 
         await prisma.subscription.create({
             data: {
@@ -79,7 +82,8 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
                         id: activityId,
                     },
                 },
-                class: classe
+                class: classe,
+                position,
             },
             select: {
                 activity: true,
@@ -87,8 +91,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         });
         return res.status(200).json({ status: 200, message: "Iscrizione registrata correttamente!" });
     } catch (e) {
-        console.log(e);
-        return res.status(400).json({ status: 400, message: "Si è verificato un errore durante l'iscrizione all'attività." });
+        return res.status(400).json({ status: 400, message: "Si è verificato un errore durante l'iscrizione all'attività.", error: e });
     }
 };
 
