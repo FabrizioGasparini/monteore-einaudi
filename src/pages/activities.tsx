@@ -27,7 +27,7 @@ export type Activity = {
     }
 }
 
-export const closingDate = new Date("2025-05-12T00:00:00Z")
+let closingDate = new Date("2026-05-05T20:00")
 
 const dateOptions = { timeZone: 'UTC', month: 'long', weekday:'long', day: 'numeric', year: 'numeric'};
 
@@ -62,6 +62,28 @@ export default function Activities({ email, classe, classNumber }: { email: stri
     const [activityId, setActivityId] = useState(0)
 
     useEffect(() => {
+        const getClosingDate = async () => {
+            fetch("/api/closingDate", {
+                credentials: 'include',
+                method: "GET",
+                cache: "no-cache",
+                headers: new Headers({
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                })
+            })
+            .then((res) => { return res.json() })
+            .then((data) => {
+                closingDate = new Date(data.date + "T" + data.time)
+                return data
+            })
+            .catch((e) => {
+                alert("Si è verificato un errore. Riprova")
+            })
+            
+        }
+
+        getClosingDate()
         setShowActivity(false)
     }, []);
 
@@ -221,7 +243,6 @@ export default function Activities({ email, classe, classNumber }: { email: stri
                                 alert("Tempo per l'iscrizione terminato! Iscrizioni chiuse")
                                 return
                             }
-                            subscribeToEvent(activityId)
                         }}>
                             <label htmlFor='nome' className='flex items-center gap-2'>Nome Attività: </label>
                             <input type="text" id="nome" placeholder="Es. Laboratorio Arduino" contentEditable={false} readOnly value={nomeEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff] bg-[#ccc]' />

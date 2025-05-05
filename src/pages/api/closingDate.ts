@@ -50,13 +50,10 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!found) return res.status(403).json({ message: "Non hai i permessi per modificare la data di chiusura delle iscrizioni!" });
 
     // controlli sulla data di chiusura e sull'orario
-    const closingDate = new Date(date);
-    const closingTime = new Date(date + " " + time);
+    const closingDate = new Date(date + "T" + time);
     const currentDate = new Date();
-    const currentTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), currentDate.getHours(), currentDate.getMinutes());
 
-    if (closingDate.getTime() < currentTime.getTime()) return res.status(400).json({ message: "La data di chiusura deve essere successiva alla data attuale" });
-    if (closingTime.getTime() < currentTime.getTime()) return res.status(400).json({ message: "L'orario di chiusura deve essere successivo all'orario attuale" });
+    if (closingDate.getTime() < currentDate.getTime()) return res.status(400).json({ message: "La data di chiusura deve essere successiva alla data attuale" });
 
     // Aggiorna la data di chiusura delle iscrizioni (la data si trova nella tabella Info nella riga con parametro "tipo" = "data" e orario nella riga con parametro "tipo" = "orario")
     const closingDateInfo = await prisma.info.findFirst({

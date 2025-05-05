@@ -40,8 +40,12 @@ export default function MyActivities() {
         let count = 0
         for (let index = 0; index < activities.length; index++) {
             const activity = activities[index];
+            console.log(activity)
 
-            if (activity.activity.id == id && activity.position == pos) count++
+            for(let i = 0; i < activity.activity.subscriptions.length; i++) {
+                const subscription = activity.activity.subscriptions[i];
+                if (subscription.position == pos) count += 1;
+            }
         }
 
         return count

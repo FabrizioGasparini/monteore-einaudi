@@ -227,12 +227,11 @@ export default function ManageActivities() {
         setPosition(pos)
 
         let count = 0
-
         for (let i = 0; i < activities.find((activity: Activity) => activity.id === id)?.subscriptions!.length; i++) {
             const subscription = activities.find((activity: Activity) => activity.id === id)?.subscriptions[i];
             if(subscription.position == pos) count += 1
         }
-        
+
         setCurrentSubscriptionsCount(count)
     }
 

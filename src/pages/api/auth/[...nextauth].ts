@@ -62,6 +62,7 @@ export default NextAuth({
                         data: {
                             email: profile.email,
                             class: classe,
+                            subHours: "[]",
                         },
                     });
                 }
