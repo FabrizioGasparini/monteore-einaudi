@@ -67,7 +67,7 @@ export default function MyActivities() {
                                     <div className="text-sm text-gray-400 mx-1">📍 {sub.activity.location.toUpperCase()}</div>
                                     <div className="text-sm text-gray-400 mx-1">📆 {formatDate(startDate).toUpperCase()}</div>
                                     <div className="text-sm text-gray-400 mx-1">⏰ {formatTime(startTime)}-{formatTime(endTime)}</div>
-                                    <div className="text-sm text-gray-400 mx-1">👥 {getSubsByPositions(sub.activity.id, sub.position)}/{sub.activity.maxNumber} ISCRITTI</div>
+                                    {/* <div className="text-sm text-gray-400 mx-1">👥 {getSubsByPositions(sub.activity.id, sub.position)}/{sub.activity.maxNumber} ISCRITTI</div> */}
                                     {
                                        <button onClick={() => unsubscribeToEvent(sub.activity.id, sub.position)} type="button" className='mt-4 p-3 w-full cursor-pointer text-base font-medium rounded-xl bg-[#ff0000] transition-all ease-in-out hover:scale-[1.02]'>Annulla Iscrizione</button>
                                     }

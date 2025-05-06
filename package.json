@@ -6,6 +6,7 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
+        "update": "git pull && next build && pm2 restart all",
         "lint": "next lint"
     },
     "dependencies": {

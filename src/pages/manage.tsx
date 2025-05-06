@@ -93,7 +93,7 @@ export default function ManageActivities() {
         fetch("/api/edit", {
             credentials: 'include',
             method: "PUT",
-            body: JSON.stringify({ id, name: nomeEdit, aula: aulaEdit, desc:descEdit, date: dataEdit, startTime: oraInizioEdit, endTime: oraFineEdit, maxNumber: maxIscrittiEdit }),
+            body: JSON.stringify({ id, name: nomeEdit, aula: aulaEdit, duration: durataEdit, desc:descEdit, date: dataEdit, startTime: oraInizioEdit, endTime: oraFineEdit, maxNumber: maxIscrittiEdit }),
             cache: "no-cache",
             headers: new Headers({
                 "Accept": "application/json",
@@ -377,7 +377,7 @@ export default function ManageActivities() {
                 <div className='fixed h-auto w-9/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#252525] rounded-lg bg-opacity-80 text-center p-4 border-gray-400 border-2 shadow-lg max-h-[90%] overflow-y-scroll'>
                     <div className="topbar">
                         <h2 className='text-2xl font-bold'>{isCreating ? "Crea" : "Modifica"} Attività</h2>
-                        <button onClick={() => setIsEditing(false)} className='absolute top-4 right-4 text-red-400 hover:text-red-600 transition-colors duration-200 ease-in-out'>✖</button>        
+                        <button onClick={() => setIsEditing(false)} className='absolute top-4 right-4 text-red-400 hover:text-red-600 transition-colors duration-200 ease-in-out font-black'>X</button>        
                     </div>
                     
                     <form className='flex flex-col gap-4' onSubmit={(e) => {
@@ -422,12 +422,12 @@ export default function ManageActivities() {
                 <div className='fixed h-auto w-9/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#252525] rounded-lg bg-opacity-80 text-center p-4 border-gray-400 border-2 shadow-lg max-h-[90%] overflow-y-scroll'>
                     <div className="topbar mb-2">
                         <h2 className='text-2xl font-bold'>Partecipanti Attività</h2>
-                        <button onClick={() => setIsWatching(false)} className='absolute top-4 right-4 text-red-400 hover:text-red-600 transition-colors duration-200 ease-in-out'>✖</button>        
+                        <button onClick={() => setIsWatching(false)} className='absolute top-4 right-4 text-red-400 hover:text-red-600 transition-colors duration-200 ease-in-out '>X</button>        
                     </div>
                     <label htmlFor='durata' className='flex items-center gap-2 w-full justify-center'>SELEZIONA ORARIO: </label>
                     <select id="durata" defaultValue="0" className='text-black py-2 px-4 border-4 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none border-[#007bff]' onChange={(e) => changePosition(activityId, Number(e.target.value))}>
                         {
-                            [...Array((maxDurataEdit) / durataEdit)].map((x, i) => <option value={i.toString()} key={i}>{formatTime(new Date(0, 0, 0, new Date(activities.find((activity: Activity) => activity.id === activityId)?.startTime).getHours() + durataEdit * (i), 0))} - {formatTime(new Date(0, 0, 0, new Date(activities.find((activity: Activity) => activity.id === activityId)?.startTime).getHours() + durataEdit * (i + 1), 0))}</option>)
+                            [...Array((maxDurataEdit) / durataEdit)].map((x, i) => <option value={i.toString()} key={i}>{formatTime(new Date(0, 0, 0, new Date(activities.find((activity: Activity) => activity.id === activityId)?.startTime).getHours() + durataEdit * (i), new Date(activities.find((activity: Activity) => activity.id === activityId)?.startTime).getMinutes()))} - {formatTime(new Date(0, 0, 0, new Date(activities.find((activity: Activity) => activity.id === activityId)?.startTime).getHours() + durataEdit * (i + 1), new Date(activities.find((activity: Activity) => activity.id === activityId)?.startTime).getMinutes()))}</option>)
                         }
                     </select>
                     <ul role="list" className="flex flex-wrap gap-4 mt-4 items-center justify-center w-full overflow-y-scroll max-h-[90%] h-auto" >

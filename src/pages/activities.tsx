@@ -232,7 +232,7 @@ export default function Activities({ email, classe, classNumber }: { email: stri
                 <div className='fixed h-auto w-9/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#252525] rounded-lg bg-opacity-80 text-center p-4 border-gray-400 border-2 shadow-lg max-h-[90%] overflow-y-scroll resize-none'>
                     <div className="topbar">
                         <h2 className='text-2xl font-bold'>Dettagli Attività</h2>
-                        <button onClick={() => setShowActivity(false)} className='absolute top-4 right-4 text-red-400 hover:text-red-600 transition-colors duration-200 ease-in-out'>✖</button>        
+                        <button onClick={() => setShowActivity(false)} className='absolute top-4 right-4 text-red-400 hover:text-red-600 transition-colors duration-200 ease-in-out font-black'>X</button>        
                     </div>
                     
                         <form className='flex flex-col gap-4 max-h-[90%]' onSubmit={(e) => {
@@ -283,7 +283,7 @@ export default function Activities({ email, classe, classNumber }: { email: stri
                             <label htmlFor='durata' className='flex items-center gap-2 w-full justify-center'>SELEZIONA ORARIO: </label>
                             <select id="durata" defaultValue="0" className='text-black py-2 px-4 border-4 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none border-[#007bff]' onChange={(e) => changePosition(activityId, Number(e.target.value))}>
                                 {
-                                    [...Array((maxDurataEdit) / durataEdit)].map((x, i) => <option value={i.toString()} key={i}>{formatTime(new Date(0, 0, 0, new Date(activities.find((activity: Activity) => activity.id === activityId)?.startTime).getHours() + durataEdit * (i), 0))} - {formatTime(new Date(0, 0, 0, new Date(activities.find((activity: Activity) => activity.id === activityId)?.startTime).getHours() + durataEdit * (i + 1), 0))}</option>)
+                                    [...Array((maxDurataEdit) / durataEdit)].map((x, i) => <option value={i.toString()} key={i}>{formatTime(new Date(0, 0, 0, new Date(activities.find((activity: Activity) => activity.id === activityId)?.startTime).getHours() + durataEdit * (i), new Date(activities.find((activity: Activity) => activity.id === activityId)?.startTime).getMinutes()))} - {formatTime(new Date(0, 0, 0, new Date(activities.find((activity: Activity) => activity.id === activityId)?.startTime).getHours() + durataEdit * (i + 1), new Date(activities.find((activity: Activity) => activity.id === activityId)?.startTime).getMinutes()))}</option>)
                                 }
                             </select>
 
