@@ -240,10 +240,10 @@ export default function ManageActivities() {
         const newOra = ora.split(":")
         newDate.setHours(Number(newOra[0]), Number(newOra[1]), 0, 0)
 
-        if (newDate.getTime() < new Date().getTime()) {
+        /*if (newDate.getTime() < new Date().getTime()) {
             alert("La data di chiusura non può essere nel passato")
             return
-        }
+        }*/
 
         fetch("/api/closingDate", {
             credentials: 'include',
