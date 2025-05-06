@@ -229,7 +229,7 @@ export default function Activities({ email, classe, classNumber }: { email: stri
             {
                 
                 showActivity ?
-                <div className='fixed h-fit w-9/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#252525] rounded-lg bg-opacity-80 text-center p-4 border-gray-400 border-2 shadow-lg max-h-[90%] overflow-y-scroll resize-none'>
+                <div className='fixed h-auto w-9/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#252525] rounded-lg bg-opacity-80 text-center p-4 border-gray-400 border-2 shadow-lg max-h-[90%] overflow-y-scroll resize-none'>
                     <div className="topbar">
                         <h2 className='text-2xl font-bold'>Dettagli Attività</h2>
                         <button onClick={() => setShowActivity(false)} className='absolute top-4 right-4 text-red-400 hover:text-red-600 transition-colors duration-200 ease-in-out'>✖</button>        
