@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { google } from "googleapis";
 import { PrismaClient } from "@prisma/client";
 
@@ -26,6 +27,30 @@ export default NextAuth({
                     response_type: "code",
                     scope: "openid email profile",
                 },
+            },
+        }),
+        CredentialsProvider({
+            name: "DevLogin",
+            credentials: {
+                email: {
+                    label: "Email",
+                    type: "text",
+                },
+            },
+            async authorize(credentials, req) {
+                const email = credentials?.email as string;
+                if (!email) return null;
+
+                const user = {
+                    email,
+                    class: "5X ADMIN",
+                    subHours: "[]",
+                    admin: true,
+                };
+
+                if (!user) return null;
+
+                return user;
             },
         }),
     ],
@@ -78,17 +103,19 @@ export default NextAuth({
             return true;
         },
         async session({ session, token }) {
+            if (!session) return session;
+
             const user = await prisma.user.findFirst({
                 where: {
-                    email: session.user?.email,
+                    email: session.user?.email as string,
                 },
             });
 
-            if (user) session.user.class = user.class;
+            if (user && session?.user) session.user.class = user.class;
 
             const admin = await prisma.adminList.findFirst({
                 where: {
-                    email: session.user?.email,
+                    email: session.user?.email as string,
                 },
             });
 

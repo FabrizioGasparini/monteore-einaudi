@@ -1,13 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import { PrismaClient } from "@prisma/client";
-import { closingDate } from "../activities";
 
 const prisma = new PrismaClient();
 
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     const today = new Date();
-    if (today > closingDate) return res.status(400).json({ status: 400, message: "Tempo di iscrizione terminato." });
 
     const session = await getSession({ req });
     if (!session) return res.status(400).json({ status: 400, message: "Autenticazione richiesta!" });
@@ -50,6 +48,8 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         },
     });
 
+    if (!maxDate || !maxTime) return res.status(500).json({ status: 500, message: "Errore: maxDate o maxTime null" });
+
     if (today.getTime() - new Date(maxDate.valore + "T" + maxTime.valore).getTime() > 0) return res.status(400).json({ status: 400, message: "Non puoi iscriverti, le iscrizioni sono terminate" });
     if (today.getTime() - activity.startTime.getTime() > 0) return res.status(400).json({ status: 400, message: "Non puoi iscriverti, l'attività è già iniziata" });
     if (count >= activity.maxNumber) return res.status(400).json({ status: 400, message: "Numero massimo partecipanti raggiunta" });
@@ -89,7 +89,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     const startTime = activity.startTime.getHours() + position * activity.duration;
     const endTime = activity.startTime.getHours() + (position + 1) * activity.duration;
 
-    const hours: [] = Array.from({ length: activity.duration }, (_, i) => startTime + i);
+    const hours: number[] = Array.from({ length: activity.duration }, (_, i) => startTime + i);
 
     let found = false;
     hours.forEach((hour) => {

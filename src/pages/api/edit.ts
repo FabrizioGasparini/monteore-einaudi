@@ -15,14 +15,13 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     const session = await getSession({ req });
     if (!session) return res.status(400).json({ message: "Autenticazione richiesta!" });
 
-    const found = await prisma.adminList.findFirst({
+    const email = session.user?.email as string;
+    let found = await prisma.adminList.findFirst({
         where: {
             email,
         },
     });
     if (!found) return res.status(403).json({ message: "Non hai i permessi per modificare un'attività!" });
-
-    const email = session.user?.email as string;
     const activity = await prisma.activity.findFirst({
         where: {
             id: Number(id),
@@ -40,7 +39,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     });
     if (!activity) return res.status(400).json({ message: "Id non valido" });
 
-    const found = await prisma.subscription.findFirst({
+    found = await prisma.subscription.findFirst({
         where: {
             email,
             activityId: Number(id),

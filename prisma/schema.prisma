@@ -46,6 +46,8 @@ model Subscription {
   activity Activity @relation(references: [id], fields: [activityId])
   activityId Int
   position Int
+
+  @@unique([activityId, email, position], name: "EmailActivity")
 }
 
 model Info {

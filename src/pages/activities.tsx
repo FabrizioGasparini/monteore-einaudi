@@ -283,7 +283,7 @@ export default function Activities({ email, classe, classNumber }: { email: stri
                             <label htmlFor='durata' className='flex items-center gap-2 w-full justify-center'>SELEZIONA ORARIO: </label>
                             <select id="durata" defaultValue="0" className='text-black py-2 px-4 border-4 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none border-[#007bff]' onChange={(e) => changePosition(activityId, Number(e.target.value))}>
                                 {
-                                    [...Array((maxDurataEdit) / durataEdit)].map((x, i) => <option value={i.toString()} key={i}>{formatTime(new Date(0, 0, 0, 8 + durataEdit * (i), 0))} - {formatTime(new Date(0, 0, 0, 8 + durataEdit * (i + 1), 0))}</option>)
+                                    [...Array((maxDurataEdit) / durataEdit)].map((x, i) => <option value={i.toString()} key={i}>{formatTime(new Date(0, 0, 0, new Date(activities.find((activity: Activity) => activity.id === activityId)?.startTime).getHours() + durataEdit * (i), 0))} - {formatTime(new Date(0, 0, 0, new Date(activities.find((activity: Activity) => activity.id === activityId)?.startTime).getHours() + durataEdit * (i + 1), 0))}</option>)
                                 }
                             </select>
 

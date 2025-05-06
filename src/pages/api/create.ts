@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import { PrismaClient } from "@prisma/client";
-import { monteoreDuration } from "../activities";
 
 const prisma = new PrismaClient();
 
@@ -23,8 +22,9 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     if (startDate.getTime() < new Date().getTime()) return res.status(400).json({ message: "L'orario di inizio deve essere dopo l'orario attuale" });
 
     if (!Number.isInteger(maxNumber) || maxNumber <= 0) return res.status(400).json({ message: "Il numero massimo deve essere un numero intero positivo" });
-    if (!Number.isInteger(duration) || duration <= 0 || duration > monteoreDuration) return res.status(400).json({ message: "Il numero massimo deve essere un numero intero positivo" });
+    if (!Number.isInteger(duration) || duration <= 0 || duration > 5) return res.status(400).json({ message: "Il numero massimo deve essere un numero intero positivo" });
 
+    const email = session.user?.email as string;
     const found = await prisma.adminList.findFirst({
         where: {
             email,

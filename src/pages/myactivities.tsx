@@ -2,7 +2,7 @@ import { CalendarIcon, ChevronRightIcon, UserIcon } from '@heroicons/react/solid
 import Link from 'next/link';
 import useSWR from 'swr'
 import { fetcher } from '../fetcher'
-import { Activity, Subscription, closingDate, formatDate, formatTime } from './activities';
+import { Activity, Subscription, formatDate, formatTime } from './activities';
 
 const dateOptions = { timeZone: 'UTC', month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' };
 
@@ -59,8 +59,8 @@ export default function MyActivities() {
                         {activities.length === 0 && <p>Nessuna iscrizione trovata</p>}
                         {activities.map((sub: Subscription) => {
                             const startDate = new Date(sub.activity.startTime);
-                            const startTime = new Date(0, 0, 0, 8 + (sub.position * sub.activity.duration))
-                            const endTime = new Date(0, 0, 0, 8 + ((sub.position + 1) * sub.activity.duration))
+                            const startTime = new Date(0, 0, 0, new Date(sub.activity.startTime).getHours() + (sub.position * sub.activity.duration))
+                            const endTime = new Date(0, 0, 0, new Date(sub.activity.startTime).getHours() + ((sub.position + 1) * sub.activity.duration))
                             return (
                                 <li className='bg-[#282828] border-solid border-gray-700 border-2 rounded-xl p-4 w-[100%] lg:w-[30%]' key={sub.activity.id}>
                                     <h3 title={sub.activity.name} className='my-2 text-xl font-bold text-ellipsis overflow-hidden whitespace-nowrap'>{sub.activity.name}</h3>

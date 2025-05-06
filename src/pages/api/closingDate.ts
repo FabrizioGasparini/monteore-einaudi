@@ -53,7 +53,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     const closingDate = new Date(date + "T" + time);
     const currentDate = new Date();
 
-    if (closingDate.getTime() < currentDate.getTime()) return res.status(400).json({ message: "La data di chiusura deve essere successiva alla data attuale" });
+    //if (closingDate.getTime() < currentDate.getTime()) return res.status(400).json({ message: "La data di chiusura deve essere successiva alla data attuale" });
 
     // Aggiorna la data di chiusura delle iscrizioni (la data si trova nella tabella Info nella riga con parametro "tipo" = "data" e orario nella riga con parametro "tipo" = "orario")
     const closingDateInfo = await prisma.info.findFirst({
