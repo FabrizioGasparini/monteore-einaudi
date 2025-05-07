@@ -171,14 +171,11 @@ export default function Activities({ email, classe, classNumber }: { email: stri
                         <label htmlFor='ora' className='flex items-center gap-2'>Ora:</label>
                         <select id="ora" onChange={(e) => setOra(Number(e.target.value))} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff ] w-full xl:w-fit'>
                             <option value="0">Tutte</option>
-                            <option value="8">08:00</option>
-                            <option value="9">09:00</option>
-                            <option value="10">10:00</option>
-                            <option value="11">11:00</option>
-                            <option value="12">12:00</option>
-                            <option value="13">13:00</option>
-                            <option value="14">14:00</option>
-                            <option value="15">15:00</option>
+                            <option value="8">08:00 - 09:00</option>
+                            <option value="9">09:00 - 10:00</option>
+                            <option value="10">10:00 - 11:00</option>
+                            <option value="11">11:00 - 12:00</option>
+                            <option value="12">12:00 - 13:00</option>
                         </select>
 
                         
@@ -229,12 +226,13 @@ export default function Activities({ email, classe, classNumber }: { email: stri
             {
                 
                 showActivity ?
-                <div className='fixed h-auto w-9/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#252525] rounded-lg bg-opacity-80 text-center p-4 border-gray-400 border-2 shadow-lg max-h-[90%] overflow-y-scroll resize-none'>
-                    <div className="topbar">
-                        <h2 className='text-2xl font-bold'>Dettagli Attività</h2>
-                        <button onClick={() => setShowActivity(false)} className='absolute top-4 right-4 text-red-400 hover:text-red-600 transition-colors duration-200 ease-in-out font-black'>X</button>        
-                    </div>
-                    
+                <div className='fixed h-screen w-screen top-0 left-0 bg-black bg-opacity-50 z-50 flex justify-center items-center'>                        
+                    <div className='fixed h-auto w-9/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#252525] rounded-lg bg-opacity-80 text-center p-4 border-gray-400 border-2 shadow-lg max-h-[90%] overflow-y-scroll resize-none'>
+                        <div className="topbar">
+                            <h2 className='text-2xl font-bold'>Dettagli Attività</h2>
+                            <button onClick={() => setShowActivity(false)} className='absolute top-4 right-4 text-red-400 hover:text-red-600 transition-colors duration-200 ease-in-out font-black'>X</button>        
+                        </div>
+                        
                         <form className='flex flex-col gap-4 max-h-[90%]' onSubmit={(e) => {
                             e.preventDefault()
                             e.stopPropagation()
@@ -297,6 +295,7 @@ export default function Activities({ email, classe, classNumber }: { email: stri
                                             : <button onClick={() => subscribeToEvent(activityId)} type="submit" className='mt-4 p-3 w-full cursor-pointer text-base font-medium rounded-xl bg-[#4c3fff] transition-all ease-in-out hover:scale-[1.02]'>Iscriviti</button>
                             }
                         </form>
+                    </div>
                 </div> : ''
             }
         </>

@@ -291,14 +291,11 @@ export default function ManageActivities() {
                         <label htmlFor='ora' className='flex items-center gap-2'>Ora:</label>
                         <select id="ora" onChange={(e) => setOra(Number(e.target.value))} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff] w-full xl:w-fit'>
                             <option value="0">Tutte</option>
-                            <option value="8">08:00</option>
-                            <option value="9">09:00</option>
-                            <option value="10">10:00</option>
-                            <option value="11">11:00</option>
-                            <option value="12">12:00</option>
-                            <option value="13">13:00</option>
-                            <option value="14">14:00</option>
-                            <option value="15">15:00</option>
+                            <option value="8">08:00 - 09:00</option>
+                            <option value="9">09:00 - 10:00</option>
+                            <option value="10">10:00 - 11:00</option>
+                            <option value="11">11:00 - 12:00</option>
+                            <option value="12">12:00 - 13:00</option>
                         </select>
 
                         {/*<label htmlFor='stato' className='flex items-center gap-2'>Stato Iscrizioni:</label>
@@ -374,51 +371,54 @@ export default function ManageActivities() {
             </div>
             {
                 isEditing ?
-                <div className='fixed h-auto w-9/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#252525] rounded-lg bg-opacity-80 text-center p-4 border-gray-400 border-2 shadow-lg max-h-[90%] overflow-y-scroll'>
-                    <div className="topbar">
-                        <h2 className='text-2xl font-bold'>{isCreating ? "Crea" : "Modifica"} Attività</h2>
-                        <button onClick={() => setIsEditing(false)} className='absolute top-4 right-4 text-red-400 hover:text-red-600 transition-colors duration-200 ease-in-out font-black'>X</button>        
+                <div className='fixed h-screen w-screen top-0 left-0 bg-black bg-opacity-50 z-50 flex justify-center items-center'>                        
+                    <div className='fixed h-auto w-9/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#252525] rounded-lg bg-opacity-80 text-center p-4 border-gray-400 border-2 shadow-lg max-h-[90%] overflow-y-scroll'>
+                        <div className="topbar">
+                            <h2 className='text-2xl font-bold'>{isCreating ? "Crea" : "Modifica"} Attività</h2>
+                            <button onClick={() => setIsEditing(false)} className='absolute top-4 right-4 text-red-400 hover:text-red-600 transition-colors duration-200 ease-in-out font-black'>X</button>        
+                        </div>
+                        
+                        <form className='flex flex-col gap-4' onSubmit={(e) => {
+                                e.preventDefault()
+                                
+                                if (isCreating) createEvent()
+                                else editEvent(activityId)
+                                
+                                setIsEditing(false)
+                        }}>
+                                
+                            <label htmlFor='nome' className='flex items-center gap-2'>Nome Attività: </label>
+                            <input type="text" id="nome" placeholder="Es. Laboratorio Arduino" onChange={(e) => setNomeEdit(e.target.value)} value={nomeEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
+                        
+                            <label htmlFor='aula' className='flex items-center gap-2'>Aula: </label>
+                            <input type="text" id="aula" placeholder="Es. A05" onChange={(e) => setAulaEdit(e.target.value)} value={aulaEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
+                        
+                            <label htmlFor='desc' className='flex items-center gap-2'>Descrizione: </label>
+                            <textarea id="desc" placeholder="Descrizione Attività" onChange={(e) => setDescEdit(e.target.value)} value={descEdit} rows={5} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
+
+                            <label htmlFor='data' className='flex items-center gap-2'>Data: </label>
+                            <input type="date" id="data" onChange={(e) => setDataEdit(e.target.value)} value={dataEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
+
+                            <label htmlFor='oraInizio' className='flex items-center gap-2'>Ora Inizio: </label>
+                            <input type="time" id="oraInizio" onChange={(e) => setOraInizioEdit(e.target.value)} value={oraInizioEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
+
+                            <label htmlFor='oraFine' className='flex items-center gap-2'>Ora Fine: </label>
+                            <input type="time" id="oraFine" onChange={(e) => setOraFineEdit(e.target.value)} value={oraFineEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
+
+                            <label htmlFor='durata' className='flex items-center gap-2'>Durata: </label>
+                            <input type="number" id="durata" onChange={(e) => setDurataEdit(Number(e.target.value))} value={durataEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
+
+                            <label htmlFor='maxIscritti' className='flex items-center gap-2'>Max Iscritti: </label>
+                            <input type="number" id="maxIscritti" placeholder="Es. 20" onChange={(e) => setMaxIscrittiEdit(Number(e.target.value))} value={Number(maxIscrittiEdit)} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
+
+                            <button type="submit" className='mt-4 p-3 w-full cursor-pointer text-base font-medium rounded-xl bg-[#4c3fff]'>{isCreating ? "Crea Attività"  : "Salva Modifiche"}</button>
+                            </form>
                     </div>
-                    
-                    <form className='flex flex-col gap-4' onSubmit={(e) => {
-                            e.preventDefault()
-                            
-                            if (isCreating) createEvent()
-                            else editEvent(activityId)
-                            
-                            setIsEditing(false)
-                    }}>
-                            
-                        <label htmlFor='nome' className='flex items-center gap-2'>Nome Attività: </label>
-                        <input type="text" id="nome" placeholder="Es. Laboratorio Arduino" onChange={(e) => setNomeEdit(e.target.value)} value={nomeEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
-                    
-                        <label htmlFor='aula' className='flex items-center gap-2'>Aula: </label>
-                        <input type="text" id="aula" placeholder="Es. A05" onChange={(e) => setAulaEdit(e.target.value)} value={aulaEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
-                    
-                        <label htmlFor='desc' className='flex items-center gap-2'>Descrizione: </label>
-                        <textarea id="desc" placeholder="Descrizione Attività" onChange={(e) => setDescEdit(e.target.value)} value={descEdit} rows={5} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
-
-                        <label htmlFor='data' className='flex items-center gap-2'>Data: </label>
-                        <input type="date" id="data" onChange={(e) => setDataEdit(e.target.value)} value={dataEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
-
-                        <label htmlFor='oraInizio' className='flex items-center gap-2'>Ora Inizio: </label>
-                        <input type="time" id="oraInizio" onChange={(e) => setOraInizioEdit(e.target.value)} value={oraInizioEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
-
-                        <label htmlFor='oraFine' className='flex items-center gap-2'>Ora Fine: </label>
-                        <input type="time" id="oraFine" onChange={(e) => setOraFineEdit(e.target.value)} value={oraFineEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
-
-                        <label htmlFor='durata' className='flex items-center gap-2'>Durata: </label>
-                        <input type="number" id="durata" onChange={(e) => setDurataEdit(Number(e.target.value))} value={durataEdit} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
-
-                        <label htmlFor='maxIscritti' className='flex items-center gap-2'>Max Iscritti: </label>
-                        <input type="number" id="maxIscritti" placeholder="Es. 20" onChange={(e) => setMaxIscrittiEdit(Number(e.target.value))} value={Number(maxIscrittiEdit)} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff]' />
-
-                        <button type="submit" className='mt-4 p-3 w-full cursor-pointer text-base font-medium rounded-xl bg-[#4c3fff]'>{isCreating ? "Crea Attività"  : "Salva Modifiche"}</button>
-                    </form>
                 </div> : ''
             }
             {
                 isWatching ?
+                <div className='fixed h-screen w-screen top-0 left-0 bg-black bg-opacity-50 z-50 flex justify-center items-center'>                        
                 <div className='fixed h-auto w-9/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#252525] rounded-lg bg-opacity-80 text-center p-4 border-gray-400 border-2 shadow-lg max-h-[90%] overflow-y-scroll'>
                     <div className="topbar mb-2">
                         <h2 className='text-2xl font-bold'>Partecipanti Attività</h2>
@@ -445,7 +445,7 @@ export default function ManageActivities() {
                             })
                         }
                     </ul>
-                  
+                </div>
                 </div> : ''
             }
         </>
