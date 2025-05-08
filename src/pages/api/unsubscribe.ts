@@ -4,8 +4,14 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+const closingDate = new Date("2025-05-08T20:00:00Z");
+
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     const today = new Date();
+
+    console.log("today", today);
+    console.log("closingDate", closingDate);
+    if (closingDate.getTime() - today.getTime() < 0) return res.status(400).json({ status: 400, message: "Non puoi disiscriverti, le iscrizioni sono terminate" });
 
     const session = await getSession({ req });
     if (!session) return res.status(400).json({ status: 400, message: "Autenticazione richiesta!" });
