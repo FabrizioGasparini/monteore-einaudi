@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const closingDate = new Date("2025-05-08T20:00:00Z");
+const closingDate = new Date("2025-05-30T20:00:00Z");
 
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     const today = new Date();

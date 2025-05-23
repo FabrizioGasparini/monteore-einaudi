@@ -65,6 +65,9 @@ export default function ManageActivities() {
     
     const [dataChiusura, setDataChiusura] = useState("")
     const [oraChiusura, setOraChiusura] = useState("")
+    
+    const [dataDisiscrizione, setDataDisiscrizione] = useState("")
+    const [oraDisiscrizione, setOraDisiscrizione] = useState("")
 
     
     useEffect(() => {
@@ -82,8 +85,24 @@ export default function ManageActivities() {
             setDataChiusura(data.date)
             setOraChiusura(data.time)
         }
+        
+        const getDisiscrizione = async () => {
+            const res = await fetch("/api/disiscrizioneDate", {
+                credentials: 'include',
+                method: "GET",
+                cache: "no-cache",
+                headers: new Headers({
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                })
+            })
+            const data = await res.json()
+            setDataDisiscrizione(data.date)
+            setOraDisiscrizione(data.time)
+        }
 
         getChiusura()
+        getDisiscrizione()
     }, [dataChiusura, oraChiusura])
 
     if (isValidating) return <span>Carico dati...</span>
@@ -136,9 +155,9 @@ export default function ManageActivities() {
         setAulaEdit("")
         setDescEdit("")
         setDurataEdit(0)
-        setDataEdit("2025-05-12")
+        setDataEdit("2025-05-31")
         setOraInizioEdit("08:00")
-        setOraFineEdit("12:00")
+        setOraFineEdit("13:00")
         setMaxIscrittiEdit(0)
     }
 
@@ -266,6 +285,38 @@ export default function ManageActivities() {
         setDataChiusura(date)
         setOraChiusura(ora)
     }
+
+    const cambiaDisiscrizione = (date: string, ora: string) => {
+        const newDate = new Date(date)
+        const newOra = ora.split(":")
+        newDate.setHours(Number(newOra[0]), Number(newOra[1]), 0, 0)
+
+        /*if (newDate.getTime() < new Date().getTime()) {
+            alert("La data di chiusura non può essere nel passato")
+            return
+        }*/
+
+        fetch("/api/disiscrizioneDate", {
+            credentials: 'include',
+            method: "PUT",
+            body: JSON.stringify({ date, time: ora }),
+            cache: "no-cache",
+            headers: new Headers({
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            })
+        })
+            .then((res) => { return res.json() })
+            .then((data) => {
+                return data
+            })
+            .catch((e) => {
+                alert("Si è verificato un errore. Riprova")
+            })
+
+        setDataDisiscrizione(date)
+        setOraDisiscrizione(ora)
+    }
     
 
     const today = new Date()
@@ -317,6 +368,17 @@ export default function ManageActivities() {
                             <div className="values flex w-full gap-2">
                                 <input type="date" id="dataChiusura" onChange={(e) => cambiaChiusura(e.target.value, oraChiusura)} value={dataChiusura} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff] flex-1' />
                                 <input type="time" id="oraChiusura" onChange={(e) => cambiaChiusura(dataChiusura, e.target.value)} value={oraChiusura} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff] flex-1' />
+                            </div>
+                        </div>
+                        <div className="flex w-11/12 flex-col">
+                            <div className="labels flex w-full gap-2">
+                                <label htmlFor='dataDisiscrizione' className='flex items-center gap-2 flex-1'>Data Limite Disiscrizione: </label>
+                                <label htmlFor='oraDisiscrizione' className='flex items-center gap-2 flex-1'>Ora Limite Disiscrizione: </label>
+
+                            </div>
+                            <div className="values flex w-full gap-2">
+                                <input type="date" id="dataDisiscrizione" onChange={(e) => cambiaDisiscrizione(e.target.value, oraDisiscrizione)} value={dataDisiscrizione} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff] flex-1' />
+                                <input type="time" id="oraDisiscrizione" onChange={(e) => cambiaDisiscrizione(dataDisiscrizione, e.target.value)} value={oraDisiscrizione} className='text-black py-2 px-4 border-2 border-gray-300 rounded-md min-w-[100px] transition-all duration-200 ease-in-out focus:outline-none focus:border-[#007bff] flex-1' />
                             </div>
                         </div>
                     </div>

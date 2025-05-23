@@ -92,13 +92,10 @@ export default NextAuth({
                     });
                 }
 
-                if (!!excluded || !!admin) {
-                    //console.log(profile.email + " logged in with Login Exclusion or Admin List");
-                    return true;
-                }
+                if (!!excluded || !!admin) return true;
 
                 const classeNumero = Number(studenteData[2][0]);
-                return classeNumero >= 1 && profile.email.endsWith("@einaudicorreggio.it");
+                return classeNumero != 4 && profile.email.endsWith("@einaudicorreggio.it");
             }
             return true;
         },
