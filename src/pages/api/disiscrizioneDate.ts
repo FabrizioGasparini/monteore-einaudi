@@ -58,14 +58,14 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     // Aggiorna la data di chiusura delle iscrizioni (la data si trova nella tabella Info nella riga con parametro "tipo" = "data" e orario nella riga con parametro "tipo" = "orario")
     const closingDateInfo = await prisma.info.findFirst({
         where: {
-            tipo: "data",
+            tipo: "dataDisiscrizione",
         },
     });
     if (!closingDateInfo) return res.status(400).json({ message: "Data di chiusura non trovata" });
 
     await prisma.info.update({
         where: {
-            tipo: "data",
+            tipo: "dataDisiscrizione",
         },
         data: {
             valore: date,
@@ -74,14 +74,14 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const closingTimeInfo = await prisma.info.findFirst({
         where: {
-            tipo: "orario",
+            tipo: "orarioDisiscrizione",
         },
     });
     if (!closingTimeInfo) return res.status(400).json({ message: "Orario di chiusura non trovato" });
 
     await prisma.info.update({
         where: {
-            tipo: "orario",
+            tipo: "orarioDisiscrizione",
         },
         data: {
             valore: time,

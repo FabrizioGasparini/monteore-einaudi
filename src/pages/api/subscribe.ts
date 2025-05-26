@@ -127,6 +127,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
             },
             class: classe,
             position,
+            date: new Date().toString(),
         },
         select: {
             activity: true,

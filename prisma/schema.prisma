@@ -42,6 +42,7 @@ model Subscription {
   email String
   name  String
   class String
+  date String
 
   activity Activity @relation(references: [id], fields: [activityId])
   activityId Int

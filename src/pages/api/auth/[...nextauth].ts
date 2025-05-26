@@ -94,10 +94,14 @@ export default NextAuth({
 
                 if (!!excluded || !!admin) return true;
 
+                // se non è ancora la data di inizio delle iscrizioni, non permette l'accesso
+                if (new Date() < new Date(process.env.START_DATE!)) {
+                    return false;
+                }
+
                 const classeNumero = Number(studenteData[2][0]);
                 return classeNumero != 4 && profile.email.endsWith("@einaudicorreggio.it");
             }
-            return true;
         },
         async session({ session, token }) {
             if (!session) return session;
